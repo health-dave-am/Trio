@@ -70,6 +70,56 @@ silent-wrong-behavior bug rather than a compile error:
 
 ## Localized-string extraction check
 
-Deferred to the build task (task 5) — the four new `String(localized:)` keys
-extracted by `SWIFT_EMIT_LOC_STRINGS = YES` will be verified against
-`Trio/Sources/Localizations/Main/Localizable.xcstrings` after the build.
+**Result (2026-09-29): extraction did NOT happen.** After a full
+`build-for-testing` run (see `Build verification` below), none of the four
+new keys appear in `Trio/Sources/Localizations/Main/Localizable.xcstrings`:
+
+- "High Glucose Soon" — not found
+- "Fires when glucose is forecasted to be high within the next 20 minutes." — not found
+- "Fires when the forecast at +20 minutes (blended across all available prediction curves) is at or above this value." — not found
+- "Your glucose may go above %2$@ in %1$d min." — not found
+
+`SWIFT_EMIT_LOC_STRINGS = YES` is confirmed set on the relevant targets in
+`Trio.xcodeproj/project.pbxproj`, so the setting is not the problem — the
+`.stringsdata` merge into the checked-in `.xcstrings` catalog apparently
+requires a different build path than `xcodebuild build-for-testing`
+(e.g. an Xcode-driven "Build" or an explicit localization export step) and
+did not occur here. Per task 1's own instruction, this is left for Phase 02
+to add the four keys to the catalog directly rather than relying on
+automatic extraction.
+
+## Build verification (task 5, 2026-09-29)
+
+- Two submodules under the workspace were **not initialized** in this
+  checkout: `LibreCRKit`, `LoopAlgorithm` (missing `Package.swift`, broke
+  package resolution), plus `AccuChekKit`, `EversenseKit`, `LibreLoop`
+  (missing `Package.swift`/build files, broke module resolution for
+  `LibreLoop` specifically, referenced by `HomeStateModel.swift`). Ran
+  `git submodule update --init` for all five — this is a local environment
+  fix (checks out the already-pinned commit recorded in the superproject),
+  not a code change, and does not appear in `git status` for the main repo.
+- Picked `iPhone 16` (OS 18.5, id `824CA0D3-092A-47CA-B97E-790C1AA3B9C8`)
+  since multiple same-name simulators exist across OS versions and the bare
+  `name:` destination was ambiguous.
+- `xcodebuild build-for-testing -workspace Trio.xcworkspace -scheme "Trio Tests" ...`
+  **succeeded** (exit code 0, `TrioTests.xctest` built and embedded in
+  `Trio.app/PlugIns/`). Only warnings remain (pre-existing Sendable/async
+  warnings across LoopKit/LibreLoop, a few `var` never mutated in test
+  files, a duplicate-build-file warning for `CalibrationsTests.swift`, and
+  an `AccuChekKit` umbrella-header module-map warning) — none related to
+  the `forecastedHigh` change.
+- The project's own "Swiftformat" run-script build phase (runs on every
+  build, confirmed in the build log) reformatted the two in-scope files
+  changed in the previous task — `GlucoseAlertCoordinator.swift` and
+  `GlucoseAlertsRootView.swift` — reordering the `.forecastedHigh`/`.high`
+  case labels alphabetically. This is expected project-style enforcement,
+  left in place. It also reformatted four unrelated test files inside the
+  `EversenseKit` submodule as a side effect of building the whole
+  workspace; those were **reverted** (`git checkout --` inside the
+  submodule) since they are out of scope for this task.
+- `git status` / `git diff --stat` now show exactly: the two in-scope
+  Swift files (swiftformat-reordered case labels only, no logic change)
+  and the two pre-existing Xcode scheme edits noted at the start of the
+  session. No string-catalog changes (see extraction check above). Per
+  task instructions, nothing was committed — left for the user to review
+  and test on device.

@@ -1,0 +1,14 @@
+2026-09-29 00:18:20.242 xcodebuild[56276:70857322] [MT] DVTAssertions: Warning in IDEFrameworks/IDEFoundation/Testing/IDETestRunSpecificationBuilder.m:463
+Details:  Test host (/Users/dave/Library/Developer/Xcode/DerivedData/Trio-awerjeorilzcocefdkpvzqssjkfj/Build/Products/Debug-iphonesimulator/Trio.app/Trio) for <Xcode3TargetProduct:0x7c2835680:TrioTests.xctest blueprint:<Xcode3Target:0x7c2f76940:TrioTests>> was not found among the preferred buildables but a match was found in the workspace-wide search.
+Object:   <IDETestRunSpecificationBuilder>
+Method:   +hostBuildableProductForBuildable:buildParameters:workspace:preferredBuildables:
+Thread:   <_NSMainThread: 0x10549dee0>{number = 1, name = main}
+Please file a bug at https://feedbackassistant.apple.com with this warning message and any useful information you can provide.
+note: Using codesigning identity override: -
+note: Run script build phase 'Run Script: Capture Build Details' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Trio' from project 'Trio')
+note: Run script build phase 'Run Script: Capture Release Notes' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Trio' from project 'Trio')
+note: Run script build phase 'Swiftformat' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Trio' from project 'Trio')
+warning: Run script build phase 'Run Script: Copy dSYM to Crashlytics' will be run during every build because it does not specify any outputs. To address this issue, either add output dependencies to the script phase, or configure it to run in every build by unchecking "Based on dependency analysis" in the script phase. (in target 'Trio' from project 'Trio')
+warning: Skipping duplicate build file in Compile Sources build phase: /Users/dave/code/ios/Trio/Trio/Sources/Modules/WatchConfig/View/WatchConfigRootView.swift (in target 'Trio' from project 'Trio')
+warning: Skipping duplicate build file in Compile Sources build phase: /Users/dave/code/ios/Trio/TrioTests/CalibrationsTests.swift (in target 'TrioTests' from project 'Trio')
+/Users/dave/code/ios/Trio/AccuChekKit/AccuChekKit.xcodeproj: warning: DEFINES_MODULE was set, but no umbrella header could be found to generate the module map (in target 'AccuChekKit' from project 'AccuChekKit')
