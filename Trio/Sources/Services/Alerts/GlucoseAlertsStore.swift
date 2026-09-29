@@ -29,7 +29,8 @@ final class GlucoseAlertsStore: ObservableObject {
             alerts = Self.defaultAlerts()
         } else {
             // Backfill alarm types added by later releases so upgrading users
-            // get a default-on entry instead of silently missing the type.
+            // get an entry (honoring the type's `defaultIsEnabled`) instead
+            // of silently missing the type.
             var migrated = loaded
             let presentTypes = Set(loaded.map(\.type))
             for type in GlucoseAlertType.allCases where !presentTypes.contains(type) {
@@ -45,12 +46,13 @@ final class GlucoseAlertsStore: ObservableObject {
         bind()
     }
 
-    /// Seed every glucose alarm enabled. Users running a stock CGM app for
-    /// low/high notifications can disable the duplicates per-alarm; the
-    /// safer default is to have Trio alert until the user opts out.
-    /// `urgentLow` cannot be disabled from the editor regardless — it's the
-    /// safety floor — but the stored flag is kept honest so the UI binding
-    /// stays simple.
+    /// Seed every glucose alarm type, enabled per its `defaultIsEnabled`.
+    /// Users running a stock CGM app for low/high notifications can disable
+    /// the duplicates per-alarm; the safer default is to have Trio alert
+    /// until the user opts out — except types like `forecastedHigh` that
+    /// default off. `urgentLow` cannot be disabled from the editor
+    /// regardless — it's the safety floor — but the stored flag is kept
+    /// honest so the UI binding stays simple.
     private static func defaultAlerts() -> [GlucoseAlert] {
         [
             GlucoseAlert(type: .urgentLow),

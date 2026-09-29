@@ -26,7 +26,7 @@ struct GlucoseAlert: Identifiable, Codable, Equatable {
         id = UUID()
         self.type = type
         name = type.displayName
-        isEnabled = true
+        isEnabled = type.defaultIsEnabled
         thresholdMgDL = type.defaultThresholdMgDL
         soundFilename = type.defaultSoundFilename
         playsSound = true

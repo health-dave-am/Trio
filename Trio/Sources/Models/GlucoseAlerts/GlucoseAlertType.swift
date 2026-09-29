@@ -10,6 +10,7 @@ enum GlucoseAlertType: String, Codable, CaseIterable, Identifiable {
     case low
     case forecastedLow
     case high
+    case forecastedHigh
     /// Driven by `Determination.carbsReq`, not by a glucose reading. Stored
     /// alongside the other glucose alarms so the user has one place to
     /// configure schedule/sound/snooze for everything fired by Trio.
@@ -20,8 +21,9 @@ enum GlucoseAlertType: String, Codable, CaseIterable, Identifiable {
     var priority: Int { Self.allCases.firstIndex(of: self) ?? 0 }
 
     /// `true` when the alarm fires off a CGM glucose reading. `false` for
-    /// `forecastedLow` (driven by the determination forecast) and
-    /// `carbsRequired` (driven by the determination's `carbsReq` field).
+    /// `forecastedLow` and `forecastedHigh` (driven by the determination
+    /// forecast) and `carbsRequired` (driven by the determination's
+    /// `carbsReq` field).
     var isReadingDriven: Bool {
         switch self {
         case .high,
@@ -29,6 +31,7 @@ enum GlucoseAlertType: String, Codable, CaseIterable, Identifiable {
              .urgentLow:
             return true
         case .carbsRequired,
+             .forecastedHigh,
              .forecastedLow:
             return false
         }
@@ -51,6 +54,7 @@ enum GlucoseAlertType: String, Codable, CaseIterable, Identifiable {
         case .low: return String(localized: "Low Glucose")
         case .forecastedLow: return String(localized: "Low Glucose Soon")
         case .high: return String(localized: "High Glucose")
+        case .forecastedHigh: return String(localized: "High Glucose Soon")
         case .carbsRequired: return String(localized: "Carbs Required")
         }
     }
@@ -61,6 +65,7 @@ enum GlucoseAlertType: String, Codable, CaseIterable, Identifiable {
         case .low: return String(localized: "Fires when glucose drops to or below a low threshold.")
         case .forecastedLow: return String(localized: "Fires when glucose is forecasted to be low within the next 20 minutes.")
         case .high: return String(localized: "Fires when glucose rises to or above a high threshold.")
+        case .forecastedHigh: return String(localized: "Fires when glucose is forecasted to be high within the next 20 minutes.")
         case .carbsRequired: return String(localized: "Fires when oref recommends eating carbs to avoid a low.")
         }
     }
@@ -73,6 +78,7 @@ enum GlucoseAlertType: String, Codable, CaseIterable, Identifiable {
         case .low: return 72
         case .forecastedLow: return 72
         case .high: return 270
+        case .forecastedHigh: return 270
         case .carbsRequired: return 10
         }
     }
@@ -84,6 +90,7 @@ enum GlucoseAlertType: String, Codable, CaseIterable, Identifiable {
         case .low: return "trill.caf"
         case .forecastedLow: return "bloom.caf"
         case .high: return "chime.caf"
+        case .forecastedHigh: return "bloom.caf"
         case .carbsRequired: return "bloop.caf"
         }
     }
@@ -95,9 +102,26 @@ enum GlucoseAlertType: String, Codable, CaseIterable, Identifiable {
         switch self {
         case .urgentLow: return true
         case .carbsRequired,
+             .forecastedHigh,
              .forecastedLow,
              .high,
              .low: return false
+        }
+    }
+
+    /// Default for `GlucoseAlert.isEnabled` when adding a new alarm.
+    /// `forecastedHigh` defaults to disabled at the request of the Trio
+    /// maintainers so users who already rely on their CGM app's high alerts
+    /// don't get a duplicate on upgrade. Every other type stays default-on to
+    /// preserve the existing safety posture.
+    var defaultIsEnabled: Bool {
+        switch self {
+        case .forecastedHigh: return false
+        case .carbsRequired,
+             .forecastedLow,
+             .high,
+             .low,
+             .urgentLow: return true
         }
     }
 }
