@@ -124,4 +124,72 @@ import Testing
         let determination = makeDetermination(predictions: predictions)
         #expect(ForecastedGlucoseEvaluator.evaluate(determination: determination) == nil)
     }
+
+    @Test("Reduces to max across all four curves at default horizon for .high direction") func maxAcrossAllFourCurvesHighDirection() {
+        let predictions = Predictions(
+            iob: [100, 101, 102, 103, 104],
+            zt: [130, 131, 132, 133, 99],
+            cob: [110, 111, 112, 113, 90],
+            uam: [120, 121, 122, 123, 95]
+        )
+        let determination = makeDetermination(predictions: predictions)
+
+        let result = ForecastedGlucoseEvaluator.evaluate(determination: determination, direction: .high)
+        #expect(result != nil)
+        #expect(result?.predictedGlucose == Decimal(104))
+        #expect(result?.horizonMinutes == 20)
+        #expect(result?.direction == .high)
+        #expect(result?.curvesUsed == Set([.iob, .cob, .uam, .zt]))
+        #expect(result?.perCurve[.iob] == Decimal(104))
+        #expect(result?.perCurve[.cob] == Decimal(90))
+        #expect(result?.perCurve[.uam] == Decimal(95))
+        #expect(result?.perCurve[.zt] == Decimal(99))
+    }
+
+    @Test("Default direction is .low and still returns the minimum") func defaultDirectionIsLow() {
+        let predictions = Predictions(
+            iob: [100, 101, 102, 103, 104],
+            zt: [130, 131, 132, 133, 99],
+            cob: [110, 111, 112, 113, 90],
+            uam: [120, 121, 122, 123, 95]
+        )
+        let determination = makeDetermination(predictions: predictions)
+
+        let result = ForecastedGlucoseEvaluator.evaluate(determination: determination)
+        #expect(result != nil)
+        #expect(result?.predictedGlucose == Decimal(90))
+        #expect(result?.direction == .low)
+    }
+
+    @Test(".high with a subset of curves present picks the max of the available curves") func highDirectionWithSubsetOfCurves() {
+        let predictions = Predictions(
+            iob: [80, 81, 82, 83, 84],
+            zt: nil,
+            cob: nil,
+            uam: [70, 71, 72, 73, 74]
+        )
+        let determination = makeDetermination(predictions: predictions)
+
+        let result = ForecastedGlucoseEvaluator.evaluate(determination: determination, direction: .high)
+        #expect(result != nil)
+        #expect(result?.predictedGlucose == Decimal(84))
+        #expect(result?.direction == .high)
+        #expect(result?.curvesUsed == Set([.iob, .uam]))
+    }
+
+    @Test(".high returns nil when predictions are nil") func highDirectionNilPredictionsReturnsNil() {
+        let determination = makeDetermination(predictions: nil)
+        #expect(ForecastedGlucoseEvaluator.evaluate(determination: determination, direction: .high) == nil)
+    }
+
+    @Test(".high returns nil when all curves are shorter than the horizon index") func highDirectionIndexOutOfBoundsReturnsNil() {
+        let predictions = Predictions(
+            iob: [100, 101, 102],
+            zt: [130, 131, 132],
+            cob: [110, 111, 112],
+            uam: [120, 121, 122]
+        )
+        let determination = makeDetermination(predictions: predictions)
+        #expect(ForecastedGlucoseEvaluator.evaluate(determination: determination, direction: .high) == nil)
+    }
 }
