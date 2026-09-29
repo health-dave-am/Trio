@@ -15,7 +15,7 @@ import Swinject
 ///        - urgentLow / low: latest ≤ threshold (+ optional persistence)
 ///        - high: latest ≥ threshold (+ optional persistence)
 ///   2. Determination update → blend forecast at the alarm's predictive horizon
-///      (forecastedLow: fixed 20 min) and compare to threshold.
+///      (forecastedLow / forecastedHigh: fixed 20 min) and compare to threshold.
 ///
 /// Throttling + snooze are inherited from `TrioAlertManager.issueAlert`. The
 /// coordinator additionally tracks per-alarm firing state so it can retract
@@ -38,16 +38,18 @@ final class GlucoseAlertCoordinator: Injectable {
     static let recoveryMarginMgDL: Decimal = 5
 
     /// Pure breach predicate. Low family (low/urgentLow/forecastedLow) breaches
-    /// when the value is at or below threshold; high breaches at or above.
-    /// `carbsRequired` is determination-driven and evaluated separately.
-    /// Extracted for unit testing — the instance evaluators call through here.
+    /// when the value is at or below threshold; high family (high/forecastedHigh)
+    /// breaches at or above. `carbsRequired` is determination-driven and
+    /// evaluated separately. Extracted for unit testing — the instance
+    /// evaluators call through here.
     static func breached(type: GlucoseAlertType, latestMgDL: Decimal, thresholdMgDL: Decimal) -> Bool {
         switch type {
         case .forecastedLow,
              .low,
              .urgentLow:
             return latestMgDL <= thresholdMgDL
-        case .high:
+        case .high,
+             .forecastedHigh:
             return latestMgDL >= thresholdMgDL
         case .carbsRequired:
             return false
@@ -55,8 +57,8 @@ final class GlucoseAlertCoordinator: Injectable {
     }
 
     /// Pure retract predicate. A fired low-family alert retracts once the value
-    /// recovers to threshold + margin; a high alert once it falls to
-    /// threshold - margin. Extracted for unit testing.
+    /// recovers to threshold + margin; a high-family alert (high/forecastedHigh)
+    /// once it falls to threshold - margin. Extracted for unit testing.
     static func shouldRetract(
         type: GlucoseAlertType,
         latestMgDL: Decimal,
@@ -68,7 +70,8 @@ final class GlucoseAlertCoordinator: Injectable {
              .low,
              .urgentLow:
             return latestMgDL >= thresholdMgDL + recoveryMarginMgDL
-        case .high:
+        case .high,
+             .forecastedHigh:
             return latestMgDL <= thresholdMgDL - recoveryMarginMgDL
         case .carbsRequired:
             return false
@@ -185,7 +188,7 @@ final class GlucoseAlertCoordinator: Injectable {
             return
         }
 
-        if alarm.type == .forecastedLow {
+        if alarm.type == .forecastedLow || alarm.type == .forecastedHigh {
             return // handled via determinationDidUpdate
         }
         let breached = Self.breached(
@@ -217,14 +220,19 @@ final class GlucoseAlertCoordinator: Injectable {
 
         // Suppress forecasted-low if any urgent-low or low alarm is already
         // firing — the forecast came true (or worse), no point preempting
-        // it with a second alert.
+        // it with a second alert. Same reasoning for forecasted-high against
+        // an already-firing high alarm.
         let lowFamilyFiring = snapshot.contains { alarm in
             (alarm.type == .urgentLow || alarm.type == .low)
                 && firingAlertIDs.contains(alarm.id)
         }
+        let highFamilyFiring = snapshot.contains { alarm in
+            alarm.type == .high && firingAlertIDs.contains(alarm.id)
+        }
 
-        for alarm in snapshot where alarm.type == .forecastedLow {
-            if lowFamilyFiring {
+        for alarm in snapshot where alarm.type == .forecastedLow || alarm.type == .forecastedHigh {
+            let familyFiring = alarm.type == .forecastedHigh ? highFamilyFiring : lowFamilyFiring
+            if familyFiring {
                 retractIfFiring(alarm)
                 continue
             }
@@ -240,13 +248,16 @@ final class GlucoseAlertCoordinator: Injectable {
     ) {
         guard alarm.shouldEvaluate, !isAlarmSnoozed(alarm, at: now),
               isActive(alarm, at: now, configuration: configuration),
-              let result = ForecastedGlucoseEvaluator.evaluate(determination: determination)
+              let result = ForecastedGlucoseEvaluator.evaluate(
+                  determination: determination,
+                  direction: alarm.type == .forecastedHigh ? .high : .low
+              )
         else {
             retractIfFiring(alarm)
             return
         }
 
-        if result.predictedGlucose <= alarm.thresholdMgDL {
+        if Self.breached(type: alarm.type, latestMgDL: result.predictedGlucose, thresholdMgDL: alarm.thresholdMgDL) {
             fireIfNeeded(alarm, valueMgDL: result.predictedGlucose)
         } else if shouldRetract(alarm, latestMgDL: result.predictedGlucose) {
             retractIfFiring(alarm)
@@ -345,6 +356,7 @@ final class GlucoseAlertCoordinator: Injectable {
         case .low: typeSlug = "low"
         case .forecastedLow: typeSlug = "forecastedLow"
         case .high: typeSlug = "high"
+        case .forecastedHigh: typeSlug = "forecastedHigh"
         case .carbsRequired: typeSlug = "carbsRequired"
         }
         return Alert.Identifier(
@@ -373,6 +385,11 @@ final class GlucoseAlertCoordinator: Injectable {
             return String(
                 format: String(localized: "Glucose %1$@."),
                 valueString, limitString
+            )
+        case .forecastedHigh:
+            return String(
+                format: String(localized: "Your glucose may go above %2$@ in %1$d min."),
+                ForecastedGlucoseEvaluator.defaultHorizonMinutes, limitString
             )
         case .carbsRequired:
             return String(
