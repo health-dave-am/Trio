@@ -296,7 +296,7 @@ extension GlucoseAlerts {
         private func summary(for alarm: GlucoseAlert) -> String {
             let comparator: String = {
                 switch alarm.type {
-                case .high: return String(localized: "above")
+                case .high, .forecastedHigh: return String(localized: "above")
                 case .carbsRequired: return String(localized: "at least")
                 default: return String(localized: "below")
                 }

@@ -59,6 +59,7 @@ final class GlucoseAlertsStore: ObservableObject {
             GlucoseAlert(type: .low),
             GlucoseAlert(type: .forecastedLow),
             GlucoseAlert(type: .high),
+            GlucoseAlert(type: .forecastedHigh),
             GlucoseAlert(type: .carbsRequired)
         ]
     }

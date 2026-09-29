@@ -52,6 +52,7 @@ struct GlucoseAlertEditorView: View {
                 case .low: lowBody
                 case .forecastedLow: forecastedLowBody
                 case .high: highBody
+                case .forecastedHigh: forecastedHighBody
                 case .carbsRequired: carbsRequiredBody
                 }
 
@@ -156,6 +157,20 @@ struct GlucoseAlertEditorView: View {
             ),
             title: String(localized: "Glucose"),
             range: 54 ... 100,
+            step: 1,
+            units: units,
+            valueMgDL: $working.thresholdMgDL
+        )
+    }
+
+    private var forecastedHighBody: some View {
+        AlarmBGSection(
+            header: String(localized: "High Threshold"),
+            footer: String(
+                localized: "Fires when the forecast at +20 minutes (blended across all available prediction curves) is at or above this value."
+            ),
+            title: String(localized: "Glucose"),
+            range: 100 ... 400,
             step: 1,
             units: units,
             valueMgDL: $working.thresholdMgDL
