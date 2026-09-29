@@ -86,6 +86,85 @@ import Testing
             type: .carbsRequired, latestMgDL: 0, thresholdMgDL: 50, recoveryMarginMgDL: 5
         ))
     }
+
+    // MARK: - forecastedHigh evaluator + breached/shouldRetract composition
+    //
+    // `GlucoseAlertCoordinator.evaluateForecastBased` (private, driven by
+    // `determinationDidUpdate`) has no test harness in this suite — there is
+    // no mock `TrioAlertManager` to drive it end-to-end, and the low-forecast
+    // path has never had one either. These tests instead compose the two
+    // pure pieces it wires together (`ForecastedGlucoseEvaluator.evaluate`
+    // and `GlucoseAlertCoordinator.breached`/`shouldRetract`) exactly the way
+    // `evaluateForecastBased` does, at the real threshold (270) and margin (5).
+
+    private func makeHighDetermination(iob: [Decimal]) -> Determination {
+        Determination(
+            id: nil,
+            reason: "",
+            units: nil,
+            insulinReq: nil,
+            eventualBG: nil,
+            sensitivityRatio: nil,
+            rate: nil,
+            duration: nil,
+            iob: nil,
+            cob: nil,
+            predictions: Predictions(iob: iob, zt: nil, cob: nil, uam: nil),
+            deliverAt: nil,
+            carbsReq: nil,
+            temp: nil,
+            bg: nil,
+            reservoir: nil,
+            isf: nil,
+            timestamp: nil,
+            tdd: nil,
+            current_target: nil,
+            minDelta: nil,
+            expectedDelta: nil,
+            minGuardBG: nil,
+            minPredBG: nil,
+            threshold: nil,
+            carbRatio: nil,
+            received: nil
+        )
+    }
+
+    @Test("forecastedHigh fires when the max forecast at +20min is at or above threshold 270")
+    func forecastedHighComposedFires() {
+        let determination = makeHighDetermination(iob: [100, 101, 102, 103, 270])
+        let result = ForecastedGlucoseEvaluator.evaluate(determination: determination, direction: .high)
+        #expect(result != nil)
+        #expect(GlucoseAlertCoordinator.breached(
+            type: .forecastedHigh, latestMgDL: result!.predictedGlucose, thresholdMgDL: 270
+        ))
+    }
+
+    @Test("forecastedHigh does not fire when the max forecast at +20min is below threshold 270")
+    func forecastedHighComposedDoesNotFire() {
+        let determination = makeHighDetermination(iob: [100, 101, 102, 103, 269])
+        let result = ForecastedGlucoseEvaluator.evaluate(determination: determination, direction: .high)
+        #expect(result != nil)
+        #expect(!GlucoseAlertCoordinator.breached(
+            type: .forecastedHigh, latestMgDL: result!.predictedGlucose, thresholdMgDL: 270
+        ))
+    }
+
+    @Test("forecastedHigh retracts once the forecast drops to threshold - margin (265)")
+    func forecastedHighComposedRetracts() {
+        let stillBreached = makeHighDetermination(iob: [100, 101, 102, 103, 266])
+        let stillBreachedResult = ForecastedGlucoseEvaluator.evaluate(determination: stillBreached, direction: .high)
+        #expect(stillBreachedResult != nil)
+        #expect(!GlucoseAlertCoordinator.shouldRetract(
+            type: .forecastedHigh, latestMgDL: stillBreachedResult!.predictedGlucose, thresholdMgDL: 270
+        ))
+
+        let recovered = makeHighDetermination(iob: [100, 101, 102, 103, 265])
+        let recoveredResult = ForecastedGlucoseEvaluator.evaluate(determination: recovered, direction: .high)
+        #expect(recoveredResult != nil)
+        #expect(GlucoseAlertCoordinator.shouldRetract(
+            type: .forecastedHigh, latestMgDL: recoveredResult!.predictedGlucose, thresholdMgDL: 270
+        ))
+    }
 }
 
 /// Guards the #1428 invariant: "Use CGM App Alerts" suppression applies to

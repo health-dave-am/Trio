@@ -88,6 +88,33 @@ did not occur here. Per task 1's own instruction, this is left for Phase 02
 to add the four keys to the catalog directly rather than relying on
 automatic extraction.
 
+## Coordinator behavior coverage (task 4, 2026-09-29)
+
+**No mock-`TrioAlertManager` harness exists** for driving
+`GlucoseAlertCoordinator.determinationDidUpdate` / `evaluateForecast`
+end-to-end (grepped `TrioTests/` and `TrioTests/Mocks` for `GlucoseAlertCoordinator(`
+and `Mock`; the only mock in the tree is `MockTDDStorage`, unrelated). The
+existing `forecastedLow` path has never had one either, so this is a
+pre-existing gap, not a regression introduced by `forecastedHigh`.
+
+Per the task's fallback instruction, added three composed predicate tests to
+`TrioTests/GlucoseAlertCoordinatorTests.swift` instead of building a new
+harness: `forecastedHighComposedFires`, `forecastedHighComposedDoesNotFire`,
+and `forecastedHighComposedRetracts`. Each wires
+`ForecastedGlucoseEvaluator.evaluate(determination:direction: .high)` into
+`GlucoseAlertCoordinator.breached`/`shouldRetract` exactly the way the
+private `evaluateForecastBased` does, at the real threshold (270) and
+margin (5), confirming the two pure pieces compose correctly for the high
+direction.
+
+**Not covered by any automated test**, and left for in situ device testing
+per Manual Follow-Up: end-to-end `forecastedHigh` firing/suppression through
+the live `GlucoseAlertCoordinator` (snoozing, active-hours gating, and the
+`highFamilyFiring` suppression check in `evaluateForecast` that retracts a
+firing `forecastedHigh` alarm once the corresponding `high` alarm fires).
+This mirrors the existing untested state of the `forecastedLow`/`lowFamilyFiring`
+path — see [[High Glucose Soon Review]].
+
 ## Build verification (task 5, 2026-09-29)
 
 - Two submodules under the workspace were **not initialized** in this
