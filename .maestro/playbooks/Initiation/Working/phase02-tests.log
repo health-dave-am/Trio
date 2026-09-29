@@ -1,0 +1,210 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -workspace Trio.xcworkspace -scheme "Trio Tests" -destination "platform=iOS Simulator,name=iPhone 17,OS=26.2" -parallel-testing-enabled NO "-only-testing:TrioTests/ForecastedGlucoseEvaluatorTests" "-only-testing:TrioTests/GlucoseAlertCoordinatorTests" "-only-testing:TrioTests/CGMOwnershipSuppressionScopeTests" "-only-testing:TrioTests/GlucoseAlertTests" "-only-testing:TrioTests/GlucoseAlertsStoreTests"
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  CryptorECC: https://github.com/Kitura/BlueECC.git @ 1.2.201
+  ASN1: https://github.com/leif-ibsen/ASN1 @ 2.7.0
+  GoogleDataTransport: https://github.com/google/GoogleDataTransport.git @ 10.1.0
+  gRPC: https://github.com/google/grpc-binary.git @ 1.69.1
+  SwiftCharts: https://github.com/ivanschuetz/SwiftCharts.git @ master (c354c19)
+  CryptoSwift: https://github.com/krzyzanowskim/CryptoSwift @ 1.8.2
+  GoogleAppMeasurement: https://github.com/google/GoogleAppMeasurement.git @ 11.15.0
+  GoogleUtilities: https://github.com/google/GoogleUtilities.git @ 8.1.0
+  GoogleAdsOnDeviceConversion: https://github.com/googleads/google-ads-on-device-conversion-ios-sdk @ 2.3.0
+  SwiftJWT: http://github.com/Kitura/Swift-JWT.git @ 4.0.1
+  KituraContracts: https://github.com/Kitura/KituraContracts.git @ 2.0.1
+  Swinject: https://github.com/Swinject/Swinject @ 2.10.0
+  TidepoolKit: https://github.com/tidepool-org/TidepoolKit @ dev (5c92b4f)
+  BigInt: https://github.com/leif-ibsen/BigInt @ 1.24.0
+  SwiftProtobuf: https://github.com/apple/swift-protobuf.git @ 1.36.1
+  leveldb: https://github.com/firebase/leveldb.git @ 1.22.5
+  MKRingProgressView: https://github.com/maxkonovalov/MKRingProgressView.git @ master (660888a)
+  SwiftDate: https://github.com/malcommac/SwiftDate @ 6.3.1
+  swift-numerics: https://github.com/apple/swift-numerics @ 0.1.0
+  SlideButton: https://github.com/no-comment/SlideButton @ main (5eacebb)
+  abseil: https://github.com/google/abseil-cpp-binary.git @ 1.2024072200.0
+  LibreCRKit: /Users/dave/code/ios/Trio/LibreCRKit
+  InteropForGoogle: https://github.com/google/interop-ios-for-google-sdks.git @ 101.0.0
+  ConnectIQ: https://github.com/garmin/connectiq-companion-app-sdk-ios @ 1.8.0
+  Firebase: https://github.com/firebase/firebase-ios-sdk.git @ 11.15.0
+  GTMSessionFetcher: https://github.com/google/gtm-session-fetcher.git @ 4.5.0
+  LoggerAPI: https://github.com/Kitura/LoggerAPI.git @ 2.0.0
+  Cryptor: https://github.com/Kitura/BlueCryptor.git @ 2.0.2
+  LoopAlgorithm: /Users/dave/code/ios/Trio/LoopAlgorithm
+  swift-algorithms: https://github.com/apple/swift-algorithms @ 0.2.1
+  Promises: https://github.com/google/promises.git @ 2.4.0
+  AppCheck: https://github.com/google/app-check.git @ 11.2.0
+  swift-log: https://github.com/apple/swift-log.git @ 1.10.1
+  CryptorRSA: https://github.com/Kitura/BlueRSA.git @ 1.0.203
+  nanopb: https://github.com/firebase/nanopb.git @ 2.30910.0
+
+WARNING: Could not find or read `embedded.mobileprovision`. If running on Simulator, there are no provisioning profiles.
+2026-09-29 17:26:44.546367+0200 Trio[33276:72874609] [Firebase/Crashlytics] Version 11.15.0
+2026-09-29 17:26:44.881922+0200 Trio[33276:72875004] [CoreBluetooth] XPC connection invalid
+2026-09-29 17:26:44.991132+0200 Trio[33276:72874609] [WC] WCSession has not been activated
+WARNING: Could not find or read `embedded.mobileprovision`. If running on Simulator, there are no provisioning profiles.
+Test Suite 'Selected tests' started at 2026-09-29 17:26:45.534.
+Test Suite 'TrioTests.xctest' started at 2026-09-29 17:26:45.534.
+Test Suite 'TrioTests.xctest' passed at 2026-09-29 17:26:45.534.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-09-29 17:26:45.535.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64-apple-ios17.0-simulator
+◇ Suite "Trio Alerts: ForecastedGlucoseEvaluator" started.
+◇ Test "Reduces to min across all four curves at default horizon (+20min, index 4)" started.
+✔ Test "Reduces to min across all four curves at default horizon (+20min, index 4)" passed after 0.001 seconds.
+◇ Test "nil predictions returns nil" started.
+✔ Test "nil predictions returns nil" passed after 0.001 seconds.
+◇ Test "All curves shorter than the horizon index returns nil" started.
+✔ Test "All curves shorter than the horizon index returns nil" passed after 0.001 seconds.
+◇ Test "Only one populated curve is used" started.
+✔ Test "Only one populated curve is used" passed after 0.001 seconds.
+◇ Test "Non-default horizon selects the matching index" started.
+✔ Test "Non-default horizon selects the matching index" passed after 0.002 seconds.
+◇ Test "Curves with differing lengths skip those missing the index" started.
+✔ Test "Curves with differing lengths skip those missing the index" passed after 0.001 seconds.
+◇ Test "All-empty arrays return nil" started.
+✔ Test "All-empty arrays return nil" passed after 0.001 seconds.
+◇ Test "Reduces to max across all four curves at default horizon for .high direction" started.
+✔ Test "Reduces to max across all four curves at default horizon for .high direction" passed after 0.001 seconds.
+◇ Test "Default direction is .low and still returns the minimum" started.
+✔ Test "Default direction is .low and still returns the minimum" passed after 0.001 seconds.
+◇ Test ".high with a subset of curves present picks the max of the available curves" started.
+✔ Test ".high with a subset of curves present picks the max of the available curves" passed after 0.001 seconds.
+◇ Test ".high returns nil when predictions are nil" started.
+✔ Test ".high returns nil when predictions are nil" passed after 0.001 seconds.
+◇ Test ".high returns nil when all curves are shorter than the horizon index" started.
+✔ Test ".high returns nil when all curves are shorter than the horizon index" passed after 0.001 seconds.
+✔ Suite "Trio Alerts: ForecastedGlucoseEvaluator" passed after 0.005 seconds.
+◇ Suite "Trio Alerts: GlucoseAlertCoordinator breach/retract" started.
+◇ Test "low breaches at or below threshold 70" started.
+✔ Test "low breaches at or below threshold 70" passed after 0.008 seconds.
+◇ Test "low retracts only at threshold + margin (70 + 5)" started.
+✔ Test "low retracts only at threshold + margin (70 + 5)" passed after 0.001 seconds.
+◇ Test "urgentLow breaches at or below threshold 54" started.
+✔ Test "urgentLow breaches at or below threshold 54" passed after 0.001 seconds.
+◇ Test "high breaches at or above threshold 270" started.
+✔ Test "high breaches at or above threshold 270" passed after 0.001 seconds.
+◇ Test "high retracts only at threshold - margin (270 - 5)" started.
+✔ Test "high retracts only at threshold - margin (270 - 5)" passed after 0.001 seconds.
+◇ Test "forecastedHigh breaches at or above threshold 270" started.
+✔ Test "forecastedHigh breaches at or above threshold 270" passed after 0.001 seconds.
+◇ Test "forecastedHigh retracts only at threshold - margin (270 - 5)" started.
+✔ Test "forecastedHigh retracts only at threshold - margin (270 - 5)" passed after 0.001 seconds.
+◇ Test "type priority order: urgentLow < low < forecastedLow < high < forecastedHigh < carbsRequired" started.
+✔ Test "type priority order: urgentLow < low < forecastedLow < high < forecastedHigh < carbsRequired" passed after 0.001 seconds.
+◇ Test "shouldRetract uses the default 5 mg/dL margin when omitted" started.
+✔ Test "shouldRetract uses the default 5 mg/dL margin when omitted" passed after 0.001 seconds.
+◇ Test "carbsRequired never breaches via the mg/dL predicate" started.
+✔ Test "carbsRequired never breaches via the mg/dL predicate" passed after 0.001 seconds.
+◇ Test "carbsRequired never retracts via the mg/dL predicate" started.
+✔ Test "carbsRequired never retracts via the mg/dL predicate" passed after 0.001 seconds.
+◇ Test "forecastedHigh fires when the max forecast at +20min is at or above threshold 270" started.
+✔ Test "forecastedHigh fires when the max forecast at +20min is at or above threshold 270" passed after 0.001 seconds.
+◇ Test "forecastedHigh does not fire when the max forecast at +20min is below threshold 270" started.
+✔ Test "forecastedHigh does not fire when the max forecast at +20min is below threshold 270" passed after 0.001 seconds.
+◇ Test "forecastedHigh retracts once the forecast drops to threshold - margin (265)" started.
+✔ Test "forecastedHigh retracts once the forecast drops to threshold - margin (265)" passed after 0.001 seconds.
+✔ Suite "Trio Alerts: GlucoseAlertCoordinator breach/retract" passed after 0.009 seconds.
+◇ Suite "Trio Alerts: CGM-ownership suppression scope" started.
+◇ Test "Forecast and carbs-required alarms are not reading-driven" started.
+✔ Test "Forecast and carbs-required alarms are not reading-driven" passed after 0.001 seconds.
+◇ Test "Only high/low/urgentLow are reading-driven" started.
+✔ Test "Only high/low/urgentLow are reading-driven" passed after 0.001 seconds.
+✔ Suite "Trio Alerts: CGM-ownership suppression scope" passed after 0.001 seconds.
+◇ Suite "Trio Alerts: GlucoseAlert" started.
+◇ Test "urgentLow evaluates even when isEnabled is false" started.
+✔ Test "urgentLow evaluates even when isEnabled is false" passed after 0.001 seconds.
+◇ Test "urgentLow evaluates when isEnabled is true" started.
+✔ Test "urgentLow evaluates when isEnabled is true" passed after 0.001 seconds.
+◇ Test "low does not evaluate when disabled" started.
+✔ Test "low does not evaluate when disabled" passed after 0.001 seconds.
+◇ Test "low evaluates when enabled" started.
+✔ Test "low evaluates when enabled" passed after 0.001 seconds.
+◇ Test "high does not evaluate when disabled" started.
+✔ Test "high does not evaluate when disabled" passed after 0.001 seconds.
+◇ Test "high evaluates when enabled" started.
+✔ Test "high evaluates when enabled" passed after 0.001 seconds.
+◇ Test "forecastedLow does not evaluate when disabled" started.
+✔ Test "forecastedLow does not evaluate when disabled" passed after 0.001 seconds.
+◇ Test "forecastedLow evaluates when enabled" started.
+✔ Test "forecastedLow evaluates when enabled" passed after 0.001 seconds.
+◇ Test "forecastedHigh does not evaluate when disabled" started.
+✔ Test "forecastedHigh does not evaluate when disabled" passed after 0.001 seconds.
+◇ Test "forecastedHigh evaluates when enabled" started.
+✔ Test "forecastedHigh evaluates when enabled" passed after 0.001 seconds.
+◇ Test "carbsRequired does not evaluate when disabled" started.
+✔ Test "carbsRequired does not evaluate when disabled" passed after 0.001 seconds.
+◇ Test "carbsRequired evaluates when enabled" started.
+✔ Test "carbsRequired evaluates when enabled" passed after 0.001 seconds.
+◇ Test "carbsRequired defaults: threshold 10 g, bloop.caf, no override" started.
+✔ Test "carbsRequired defaults: threshold 10 g, bloop.caf, no override" passed after 0.001 seconds.
+◇ Test "isReadingDriven: true for low family + high, false for forecast + carbs" started.
+✔ Test "isReadingDriven: true for low family + high, false for forecast + carbs" passed after 0.003 seconds.
+◇ Test "forecastedHigh defaults: disabled, threshold 270 mg/dL, bloom.caf, no override" started.
+✔ Test "forecastedHigh defaults: disabled, threshold 270 mg/dL, bloom.caf, no override" passed after 0.001 seconds.
+◇ Test "Every type other than forecastedHigh seeds isEnabled == true via defaultIsEnabled" started.
+✔ Test "Every type other than forecastedHigh seeds isEnabled == true via defaultIsEnabled" passed after 0.001 seconds.
+◇ Test "Slug round-trip: glucose.forecastedHigh.<uuid> parses to forecastedHigh" started.
+✔ Test "Slug round-trip: glucose.forecastedHigh.<uuid> parses to forecastedHigh" passed after 0.001 seconds.
+◇ Test "Omitted isEnabled defaults to true" started.
+✔ Test "Omitted isEnabled defaults to true" passed after 0.001 seconds.
+◇ Test "urgentLow with isEnabled false decodes false but still evaluates" started.
+✔ Test "urgentLow with isEnabled false decodes false but still evaluates" passed after 0.001 seconds.
+◇ Test "high with optional fields omitted uses type defaults" started.
+✔ Test "high with optional fields omitted uses type defaults" passed after 0.001 seconds.
+◇ Test "urgentLow with overridesSilenceAndDND omitted uses type defaults" started.
+✔ Test "urgentLow with overridesSilenceAndDND omitted uses type defaults" passed after 0.001 seconds.
+◇ Test "Fully-populated value survives encode/decode round-trip" started.
+✔ Test "Fully-populated value survives encode/decode round-trip" passed after 0.003 seconds.
+✔ Suite "Trio Alerts: GlucoseAlert" passed after 0.012 seconds.
+◇ Suite "Trio Alerts: GlucoseAlertsStore seed + backfill" started.
+◇ Test "Fresh store seeds one alert per type" started.
+✔ Test "Fresh store seeds one alert per type" passed after 0.001 seconds.
+◇ Test "Legacy load (no carbsRequired) backfills the new type" started.
+✔ Test "Legacy load (no carbsRequired) backfills the new type" passed after 0.005 seconds.
+◇ Test "Legacy load (no forecastedHigh) backfills the new type disabled" started.
+✔ Test "Legacy load (no forecastedHigh) backfills the new type disabled" passed after 0.002 seconds.
+◇ Test "Backfill preserves user customizations on existing entries" started.
+✔ Test "Backfill preserves user customizations on existing entries" passed after 0.003 seconds.
+◇ Test "Full load doesn't double up on existing types" started.
+✔ Test "Full load doesn't double up on existing types" passed after 0.003 seconds.
+◇ Test "Single .always covers everything: no options available" started.
+✔ Test "Single .always covers everything: no options available" passed after 0.003 seconds.
+◇ Test "Only .day taken → only .night available" started.
+✔ Test "Only .day taken → only .night available" passed after 0.001 seconds.
+◇ Test "Only .night taken → only .day available" started.
+✔ Test "Only .night taken → only .day available" passed after 0.002 seconds.
+◇ Test ".day + .night both taken → none available" started.
+✔ Test ".day + .night both taken → none available" passed after 0.003 seconds.
+◇ Test "forecastedHigh: only .day taken → only .night available, mirroring forecastedLow" started.
+✔ Test "forecastedHigh: only .day taken → only .night available, mirroring forecastedLow" passed after 0.001 seconds.
+◇ Test "forecastedHigh: .day + .night both taken → none available, mirroring forecastedLow" started.
+✔ Test "forecastedHigh: .day + .night both taken → none available, mirroring forecastedLow" passed after 0.002 seconds.
+◇ Test "No alarm of this type → all three options available" started.
+✔ Test "No alarm of this type → all three options available" passed after 0.002 seconds.
+◇ Test "Gating is per-type — other types don't block" started.
+✔ Test "Gating is per-type — other types don't block" passed after 0.002 seconds.
+◇ Test "Editing an existing .day alarm: .always becomes pickable again" started.
+✔ Test "Editing an existing .day alarm: .always becomes pickable again" passed after 0.002 seconds.
+◇ Test "Editing one of two split alarms: only own window available" started.
+✔ Test "Editing one of two split alarms: only own window available" passed after 0.002 seconds.
+◇ Test "Fresh-seeded store has no available windows for any type" started.
+✔ Test "Fresh-seeded store has no available windows for any type" passed after 0.001 seconds.
+✔ Suite "Trio Alerts: GlucoseAlertsStore seed + backfill" passed after 0.044 seconds.
+✔ Test run with 66 tests in 5 suites passed after 0.073 seconds.
+2026-09-29 11:26:45.916 xcodebuild[32708:72869290] [MT] IDETestOperationsObserverDebug: 27.343 elapsed -- Testing started completed.
+2026-09-29 11:26:45.916 xcodebuild[32708:72869290] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-29 11:26:45.916 xcodebuild[32708:72869290] [MT] IDETestOperationsObserverDebug: 27.343 sec, +27.343 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/dave/Library/Developer/Xcode/DerivedData/Trio-awerjeorilzcocefdkpvzqssjkfj/Logs/Test/Test-Trio Tests-2026.09.29_11-26-18--0400.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

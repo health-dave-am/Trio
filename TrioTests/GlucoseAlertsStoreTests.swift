@@ -114,14 +114,18 @@ import Testing
         #expect(store.availableActiveOptions(forNewAlarmOfType: .forecastedLow).isEmpty)
     }
 
-    @Test("forecastedHigh: only .day taken → only .night available, mirroring forecastedLow") func forecastedHighDayTakenOffersNight() {
+    @Test(
+        "forecastedHigh: only .day taken → only .night available, mirroring forecastedLow"
+    ) func forecastedHighDayTakenOffersNight() {
         var existing = GlucoseAlert(type: .forecastedHigh)
         existing.activeOption = .day
         let store = Self.storeWithOnly([existing])
         #expect(store.availableActiveOptions(forNewAlarmOfType: .forecastedHigh) == [.night])
     }
 
-    @Test("forecastedHigh: .day + .night both taken → none available, mirroring forecastedLow") func forecastedHighDayAndNightTakenLocked() {
+    @Test(
+        "forecastedHigh: .day + .night both taken → none available, mirroring forecastedLow"
+    ) func forecastedHighDayAndNightTakenLocked() {
         var day = GlucoseAlert(type: .forecastedHigh)
         day.activeOption = .day
         var night = GlucoseAlert(type: .forecastedHigh)

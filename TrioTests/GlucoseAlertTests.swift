@@ -104,7 +104,9 @@ import Testing
         #expect(a.overridesSilenceAndDND == false)
     }
 
-    @Test("Every type other than forecastedHigh seeds isEnabled == true via defaultIsEnabled") func defaultIsEnabledExceptForecastedHigh() {
+    @Test(
+        "Every type other than forecastedHigh seeds isEnabled == true via defaultIsEnabled"
+    ) func defaultIsEnabledExceptForecastedHigh() {
         for type in GlucoseAlertType.allCases where type != .forecastedHigh {
             #expect(GlucoseAlert(type: type).isEnabled == true, "\(type) should seed enabled")
         }

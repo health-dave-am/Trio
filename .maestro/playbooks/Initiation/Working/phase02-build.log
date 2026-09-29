@@ -1,0 +1,44 @@
+2026-09-29 11:25:53.355 xcodebuild[32072:72866465] [MT] DVTAssertions: Warning in IDEFrameworks/IDEFoundation/Testing/IDETestRunSpecificationBuilder.m:463
+Details:  Test host (/Users/dave/Library/Developer/Xcode/DerivedData/Trio-awerjeorilzcocefdkpvzqssjkfj/Build/Products/Debug-iphonesimulator/Trio.app/Trio) for <Xcode3TargetProduct:0xc2eaa4840:TrioTests.xctest blueprint:<Xcode3Target:0xc2ea73200:TrioTests>> was not found among the preferred buildables but a match was found in the workspace-wide search.
+Object:   <IDETestRunSpecificationBuilder>
+Method:   +hostBuildableProductForBuildable:buildParameters:workspace:preferredBuildables:
+Thread:   <_NSMainThread: 0x1019d9ee0>{number = 1, name = main}
+Please file a bug at https://feedbackassistant.apple.com with this warning message and any useful information you can provide.
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 (in target 'TrioTests' from project 'Trio')
+/Users/dave/code/ios/Trio/TrioTests/BolusCalculatorTests/BolusCalculatorTests.swift:18:9: warning: cannot use protocol 'Resolver' in a property declaration member of a type not marked '@_implementationOnly'; 'Swinject' was not imported by this file
+ 16 |     @Injected() var fileStorage: FileStorage!
+ 17 |     @Injected() var apsManager: APSManager!
+ 18 |     let resolver = TrioApp().resolver
+    |         `- warning: cannot use protocol 'Resolver' in a property declaration member of a type not marked '@_implementationOnly'; 'Swinject' was not imported by this file
+ 19 | 
+ 20 |     init() {
+
+Swinject.Resolver:1:17: note: protocol declared here
+ 1 | public protocol Resolver {
+   |                 `- note: protocol declared here
+ 2 |     func resolve<Service>(_ serviceType: Service.Type) -> Service?
+ 3 |     func resolve<Service>(_ serviceType: Service.Type, name: String?) -> Service?
+
+/Users/dave/code/ios/Trio/TrioTests/BolusSafetyTests/BolusSafetyValidatorTests.swift:8:9: warning: cannot use protocol 'Resolver' in a property declaration member of a type not marked '@_implementationOnly'; 'Swinject' was not imported by this file
+  6 | @Suite("Bolus Safety Validator Tests") struct BolusSafetyValidatorTests: Injectable {
+  7 |     @Injected() var validator: BolusSafetyValidator!
+  8 |     let resolver = TrioApp().resolver
+    |         `- warning: cannot use protocol 'Resolver' in a property declaration member of a type not marked '@_implementationOnly'; 'Swinject' was not imported by this file
+  9 | 
+ 10 |     init() {
+
+Swinject.Resolver:1:17: note: protocol declared here
+ 1 | public protocol Resolver {
+   |                 `- note: protocol declared here
+ 2 |     func resolve<Service>(_ serviceType: Service.Type) -> Service?
+ 3 |     func resolve<Service>(_ serviceType: Service.Type, name: String?) -> Service?
+warning: The CFBundleShortVersionString of an app extension ('1.0') must match that of its containing parent app ('1.0.1').
+note: Using codesigning identity override: -
+note: Run script build phase 'Run Script: Capture Build Details' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Trio' from project 'Trio')
+note: Run script build phase 'Run Script: Capture Release Notes' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Trio' from project 'Trio')
+note: Run script build phase 'Swiftformat' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Trio' from project 'Trio')
+warning: Run script build phase 'Run Script: Copy dSYM to Crashlytics' will be run during every build because it does not specify any outputs. To address this issue, either add output dependencies to the script phase, or configure it to run in every build by unchecking "Based on dependency analysis" in the script phase. (in target 'Trio' from project 'Trio')
+warning: Skipping duplicate build file in Compile Sources build phase: /Users/dave/code/ios/Trio/Trio/Sources/Modules/WatchConfig/View/WatchConfigRootView.swift (in target 'Trio' from project 'Trio')
+warning: Skipping duplicate build file in Compile Sources build phase: /Users/dave/code/ios/Trio/TrioTests/CalibrationsTests.swift (in target 'TrioTests' from project 'Trio')
+/Users/dave/code/ios/Trio/AccuChekKit/AccuChekKit.xcodeproj: warning: DEFINES_MODULE was set, but no umbrella header could be found to generate the module map (in target 'AccuChekKit' from project 'AccuChekKit')

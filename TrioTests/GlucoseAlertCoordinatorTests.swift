@@ -88,6 +88,7 @@ import Testing
     }
 
     // MARK: - forecastedHigh evaluator + breached/shouldRetract composition
+
     //
     // `GlucoseAlertCoordinator.evaluateForecastBased` (private, driven by
     // `determinationDidUpdate`) has no test harness in this suite — there is
@@ -97,7 +98,7 @@ import Testing
     // and `GlucoseAlertCoordinator.breached`/`shouldRetract`) exactly the way
     // `evaluateForecastBased` does, at the real threshold (270) and margin (5).
 
-    private func makeHighDetermination(iob: [Decimal]) -> Determination {
+    private func makeHighDetermination(iob: [Int]) -> Determination {
         Determination(
             id: nil,
             reason: "",
@@ -129,8 +130,7 @@ import Testing
         )
     }
 
-    @Test("forecastedHigh fires when the max forecast at +20min is at or above threshold 270")
-    func forecastedHighComposedFires() {
+    @Test("forecastedHigh fires when the max forecast at +20min is at or above threshold 270") func forecastedHighComposedFires() {
         let determination = makeHighDetermination(iob: [100, 101, 102, 103, 270])
         let result = ForecastedGlucoseEvaluator.evaluate(determination: determination, direction: .high)
         #expect(result != nil)
@@ -139,8 +139,9 @@ import Testing
         ))
     }
 
-    @Test("forecastedHigh does not fire when the max forecast at +20min is below threshold 270")
-    func forecastedHighComposedDoesNotFire() {
+    @Test(
+        "forecastedHigh does not fire when the max forecast at +20min is below threshold 270"
+    ) func forecastedHighComposedDoesNotFire() {
         let determination = makeHighDetermination(iob: [100, 101, 102, 103, 269])
         let result = ForecastedGlucoseEvaluator.evaluate(determination: determination, direction: .high)
         #expect(result != nil)
@@ -149,8 +150,7 @@ import Testing
         ))
     }
 
-    @Test("forecastedHigh retracts once the forecast drops to threshold - margin (265)")
-    func forecastedHighComposedRetracts() {
+    @Test("forecastedHigh retracts once the forecast drops to threshold - margin (265)") func forecastedHighComposedRetracts() {
         let stillBreached = makeHighDetermination(iob: [100, 101, 102, 103, 266])
         let stillBreachedResult = ForecastedGlucoseEvaluator.evaluate(determination: stillBreached, direction: .high)
         #expect(stillBreachedResult != nil)
