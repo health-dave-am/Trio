@@ -37,12 +37,28 @@ import Testing
         ))
     }
 
-    @Test("type priority order: urgentLow < low < forecastedLow < high < carbsRequired") func priorityOrder() {
+    @Test("forecastedHigh breaches at or above threshold 270") func forecastedHighBreach() {
+        #expect(GlucoseAlertCoordinator.breached(type: .forecastedHigh, latestMgDL: 270, thresholdMgDL: 270))
+        #expect(GlucoseAlertCoordinator.breached(type: .forecastedHigh, latestMgDL: 271, thresholdMgDL: 270))
+        #expect(!GlucoseAlertCoordinator.breached(type: .forecastedHigh, latestMgDL: 269, thresholdMgDL: 270))
+    }
+
+    @Test("forecastedHigh retracts only at threshold - margin (270 - 5)") func forecastedHighRetract() {
+        #expect(!GlucoseAlertCoordinator.shouldRetract(
+            type: .forecastedHigh, latestMgDL: 266, thresholdMgDL: 270, recoveryMarginMgDL: 5
+        ))
+        #expect(GlucoseAlertCoordinator.shouldRetract(
+            type: .forecastedHigh, latestMgDL: 265, thresholdMgDL: 270, recoveryMarginMgDL: 5
+        ))
+    }
+
+    @Test("type priority order: urgentLow < low < forecastedLow < high < forecastedHigh < carbsRequired") func priorityOrder() {
         #expect(GlucoseAlertType.urgentLow.priority == 0)
         #expect(GlucoseAlertType.low.priority == 1)
         #expect(GlucoseAlertType.forecastedLow.priority == 2)
         #expect(GlucoseAlertType.high.priority == 3)
-        #expect(GlucoseAlertType.carbsRequired.priority == 4)
+        #expect(GlucoseAlertType.forecastedHigh.priority == 4)
+        #expect(GlucoseAlertType.carbsRequired.priority == 5)
         #expect(GlucoseAlertType.urgentLow.priority < GlucoseAlertType.low.priority)
     }
 
@@ -80,6 +96,7 @@ import Testing
 @Suite("Trio Alerts: CGM-ownership suppression scope") struct CGMOwnershipSuppressionScopeTests {
     @Test("Forecast and carbs-required alarms are not reading-driven") func determinationDrivenTypes() {
         #expect(!GlucoseAlertType.forecastedLow.isReadingDriven)
+        #expect(!GlucoseAlertType.forecastedHigh.isReadingDriven)
         #expect(!GlucoseAlertType.carbsRequired.isReadingDriven)
     }
 

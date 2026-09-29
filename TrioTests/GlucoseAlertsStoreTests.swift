@@ -39,6 +39,21 @@ import Testing
         #expect(store.alerts.count == GlucoseAlertType.allCases.count)
     }
 
+    @Test("Legacy load (no forecastedHigh) backfills the new type disabled") func legacyLoadBackfillsForecastedHigh() {
+        let legacy: [GlucoseAlert] = [
+            GlucoseAlert(type: .urgentLow),
+            GlucoseAlert(type: .low),
+            GlucoseAlert(type: .forecastedLow),
+            GlucoseAlert(type: .high),
+            GlucoseAlert(type: .carbsRequired)
+        ]
+        let store = Self.makeStore(seed: legacy)
+        let backfilled = store.alerts.first { $0.type == .forecastedHigh }
+        #expect(backfilled != nil)
+        #expect(backfilled?.isEnabled == false)
+        #expect(store.alerts.count == GlucoseAlertType.allCases.count)
+    }
+
     @Test("Backfill preserves user customizations on existing entries") func backfillPreservesCustomizations() {
         var custom = GlucoseAlert(type: .low)
         custom.thresholdMgDL = 65
@@ -97,6 +112,22 @@ import Testing
         night.activeOption = .night
         let store = Self.storeWithOnly([day, night])
         #expect(store.availableActiveOptions(forNewAlarmOfType: .forecastedLow).isEmpty)
+    }
+
+    @Test("forecastedHigh: only .day taken → only .night available, mirroring forecastedLow") func forecastedHighDayTakenOffersNight() {
+        var existing = GlucoseAlert(type: .forecastedHigh)
+        existing.activeOption = .day
+        let store = Self.storeWithOnly([existing])
+        #expect(store.availableActiveOptions(forNewAlarmOfType: .forecastedHigh) == [.night])
+    }
+
+    @Test("forecastedHigh: .day + .night both taken → none available, mirroring forecastedLow") func forecastedHighDayAndNightTakenLocked() {
+        var day = GlucoseAlert(type: .forecastedHigh)
+        day.activeOption = .day
+        var night = GlucoseAlert(type: .forecastedHigh)
+        night.activeOption = .night
+        let store = Self.storeWithOnly([day, night])
+        #expect(store.availableActiveOptions(forNewAlarmOfType: .forecastedHigh).isEmpty)
     }
 
     @Test("No alarm of this type → all three options available") func emptyOffersAll() {

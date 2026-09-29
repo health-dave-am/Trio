@@ -54,6 +54,18 @@ import Testing
         #expect(a.shouldEvaluate == true)
     }
 
+    @Test("forecastedHigh does not evaluate when disabled") func forecastedHighDisabledDoesNotEvaluate() {
+        var a = GlucoseAlert(type: .forecastedHigh)
+        a.isEnabled = false
+        #expect(a.shouldEvaluate == false)
+    }
+
+    @Test("forecastedHigh evaluates when enabled") func forecastedHighEnabledEvaluates() {
+        var a = GlucoseAlert(type: .forecastedHigh)
+        a.isEnabled = true
+        #expect(a.shouldEvaluate == true)
+    }
+
     @Test("carbsRequired does not evaluate when disabled") func carbsRequiredDisabledDoesNotEvaluate() {
         var a = GlucoseAlert(type: .carbsRequired)
         a.isEnabled = false
@@ -80,7 +92,28 @@ import Testing
         #expect(GlucoseAlertType.low.isReadingDriven)
         #expect(GlucoseAlertType.high.isReadingDriven)
         #expect(!GlucoseAlertType.forecastedLow.isReadingDriven)
+        #expect(!GlucoseAlertType.forecastedHigh.isReadingDriven)
         #expect(!GlucoseAlertType.carbsRequired.isReadingDriven)
+    }
+
+    @Test("forecastedHigh defaults: disabled, threshold 270 mg/dL, bloom.caf, no override") func forecastedHighDefaults() {
+        let a = GlucoseAlert(type: .forecastedHigh)
+        #expect(a.isEnabled == false)
+        #expect(a.thresholdMgDL == 270)
+        #expect(a.soundFilename == "bloom.caf")
+        #expect(a.overridesSilenceAndDND == false)
+    }
+
+    @Test("Every type other than forecastedHigh seeds isEnabled == true via defaultIsEnabled") func defaultIsEnabledExceptForecastedHigh() {
+        for type in GlucoseAlertType.allCases where type != .forecastedHigh {
+            #expect(GlucoseAlert(type: type).isEnabled == true, "\(type) should seed enabled")
+        }
+        #expect(GlucoseAlert(type: .forecastedHigh).isEnabled == false)
+    }
+
+    @Test("Slug round-trip: glucose.forecastedHigh.<uuid> parses to forecastedHigh") func forecastedHighSlugRoundTrip() {
+        let uuid = UUID().uuidString
+        #expect(GlucoseAlertType(slug: "glucose.forecastedHigh.\(uuid)") == .forecastedHigh)
     }
 
     // MARK: - Group B: decoder defaults
