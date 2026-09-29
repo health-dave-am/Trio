@@ -142082,6 +142082,9 @@
         }
       }
     },
+    "Fires when glucose is forecasted to be high within the next 20 minutes." : {
+      "comment" : "Text displayed in a section header for a glucose alert that fires when the forecast at +20 minutes is high."
+    },
     "Fires when glucose is forecasted to be low within the next 20 minutes." : {
       "localizations" : {
         "bg" : {
@@ -142601,6 +142604,9 @@
           }
         }
       }
+    },
+    "Fires when the forecast at +20 minutes (blended across all available prediction curves) is at or above this value." : {
+      "comment" : "Text displayed in a section header for a glucose alert that fires when the forecast at +20 minutes (blended across all available prediction curves) is at or above the specified threshold."
     },
     "Fires when the forecast at +20 minutes (blended across all available prediction curves) is at or below this value." : {
       "comment" : "Text displayed in a section header for a glucose alert that fires when the forecast at +20 minutes (blended across all available prediction curves) is at or below the specified threshold.",
@@ -160388,6 +160394,9 @@
           }
         }
       }
+    },
+    "High Glucose Soon" : {
+      "comment" : "Text displayed as the title for a forecasted high glucose alert."
     },
     "High Glucose Target" : {
       "localizations" : {
@@ -349483,6 +349492,9 @@
           }
         }
       }
+    },
+    "Your glucose may go above %2$@ in %1$d min." : {
+      "comment" : "Notification body for a forecasted high glucose alert, with the threshold and minutes until breach."
     },
     "Your glucose may go below %2$@ in %1$d min." : {
       "localizations" : {
