@@ -27,7 +27,7 @@ concurrency:
 jobs:
   algorithm-package:
     name: Algorithm Package (swift test)
-    runs-on: macos-26
+    runs-on: xcode-27
     if: github.repository_owner == 'nightscout'
 
     steps:
@@ -85,7 +85,7 @@ jobs:
 
   test:
     name: Run Unit Tests
-    runs-on: macos-26
+    runs-on: xcode-27
     if: github.repository_owner == 'nightscout'
 
     env:
