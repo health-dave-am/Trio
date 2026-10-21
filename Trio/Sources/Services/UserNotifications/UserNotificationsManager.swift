@@ -187,8 +187,16 @@ final class BaseUserNotificationsManager: NSObject, UserNotificationsManager, In
     }
 
     func requestNotificationPermissions(completion: @escaping (Bool) -> Void) {
+<<<<<<< HEAD
         debug(.alerts, "Requesting notification permission")
         notificationCenter.requestAuthorization(options: [.badge, .sound, .alert]) { granted, error in
+||||||| parent of efb229da7 (feat: request critical alert authorization)
+        debug(.service, "requestNotificationPermissions")
+        notificationCenter.requestAuthorization(options: [.badge, .sound, .alert]) { granted, error in
+=======
+        debug(.service, "requestNotificationPermissions")
+        notificationCenter.requestAuthorization(options: [.badge, .sound, .alert, .criticalAlert]) { granted, error in
+>>>>>>> efb229da7 (feat: request critical alert authorization)
             if granted {
                 info(.alerts, "Notification permission granted")
                 DispatchQueue.main.async {
