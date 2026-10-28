@@ -189,7 +189,7 @@ jobs:
   build:
     name: Build
     needs: [check_certs, check_status]
-    runs-on: macos-26
+    runs-on: xcode-27
     permissions:
       contents: write
     if:
@@ -198,8 +198,8 @@ jobs:
         (vars.SCHEDULED_BUILD != 'false' && needs.check_status.outputs.IS_SECOND_IN_MONTH == 'true') ||
         (vars.SCHEDULED_SYNC != 'false' && needs.check_status.outputs.NEW_COMMITS == 'true' )
     steps:
-      - name: Select Xcode version
-        run: "sudo xcode-select --switch /Applications/Xcode_26.5.app/Contents/Developer"
+      # - name: Select Xcode version
+      #   run: "sudo xcode-select --switch /Applications/Xcode_26.5.app/Contents/Developer"
       
       - name: Checkout Repo for building
         uses: actions/checkout@v5
