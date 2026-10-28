@@ -181,7 +181,7 @@ platform :ios do
 
     set_github_release(
       repository_name: ENV["GITHUB_REPOSITORY"],
-      api_token: ENV["GITHUB_TOKEN"],
+      api_bearer: ENV["GITHUB_TOKEN"],
       tag_name: "#{GITHUB_REPOSITORY_OWNER}/#{version}-#{build}",
       name: "#{version} (#{build})",
       commitish: commit,
