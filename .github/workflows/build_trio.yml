@@ -289,14 +289,24 @@ jobs:
       - name: Fastlane upload to TestFlight
         run: bundle exec fastlane release
         env:
-          CREATE_GITHUB_RELEASE: ${{ vars.CREATE_GITHUB_RELEASE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEAMID: ${{ secrets.TEAMID }}
           GH_PAT: ${{ secrets.GH_PAT }}
           FASTLANE_KEY_ID: ${{ secrets.FASTLANE_KEY_ID }}
           FASTLANE_ISSUER_ID: ${{ secrets.FASTLANE_ISSUER_ID }}
           FASTLANE_KEY: ${{ secrets.FASTLANE_KEY }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+
+      # Optional: record each TestFlight build as a GitHub pre-release on this repository.
+      # Off unless you set the repository variable CREATE_GITHUB_RELEASE to true
+      # (Settings > Secrets and variables > Actions > Variables). A failure here does not
+      # fail the build, since the upload to TestFlight has already succeeded.
+      - name: Create GitHub Release
+        if: vars.CREATE_GITHUB_RELEASE == 'true'
+        continue-on-error: true
+        run: bundle exec fastlane github_release
+        env:
+          TEAMID: ${{ secrets.TEAMID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Upload Build artifacts
       - name: Upload build log, IPA and Symbol artifacts

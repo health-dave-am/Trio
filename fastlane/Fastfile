@@ -153,45 +153,41 @@ platform :ios do
       skip_waiting_for_build_processing: true,
       changelog: git_branch+" "+last_git_commit[:abbreviated_commit_hash],
     )
+  end
 
-    # Record this build as a GitHub pre-release, titled to match the TestFlight build list
-    if ENV["CREATE_GITHUB_RELEASE"] == "true"
-      version = get_ipa_info_plist_value(
-        ipa: "Trio.ipa",
-        key: "CFBundleShortVersionString"
-      )
-      build = get_ipa_info_plist_value(
-        ipa: "Trio.ipa",
-        key: "CFBundleVersion"
-      )
-      commit = last_git_commit[:commit_hash]
-      short_sha = last_git_commit[:abbreviated_commit_hash]
-      repository_url = "#{ENV["GITHUB_SERVER_URL"]}/#{ENV["GITHUB_REPOSITORY"]}"
+  desc "Create GitHub Release"
+  lane :github_release do
+    version = get_ipa_info_plist_value(
+      ipa: "Trio.ipa",
+      key: "CFBundleShortVersionString"
+    )
+    build = get_ipa_info_plist_value(
+      ipa: "Trio.ipa",
+      key: "CFBundleVersion"
+    )
+    commit = last_git_commit[:commit_hash]
+    short_sha = last_git_commit[:abbreviated_commit_hash]
+    repository_url = "#{ENV["GITHUB_SERVER_URL"]}/#{ENV["GITHUB_REPOSITORY"]}"
 
-      description = [
-        "**Version:** #{version} (#{build})",
-        "**Branch:** #{git_branch}",
-        "**Commit:** [#{short_sha}](#{repository_url}/commit/#{commit})",
-        "**Workflow run:** #{repository_url}/actions/runs/#{ENV["GITHUB_RUN_ID"]}"
-      ]
-      if ENV["TRIO_PATCHED"] == "true"
-        description.push("", "Built with local modifications not reflected in this commit.")
-      end
-
-      begin
-        set_github_release(
-          repository_name: ENV["GITHUB_REPOSITORY"],
-          api_token: ENV["GITHUB_TOKEN"],
-          tag_name: "#{GITHUB_REPOSITORY_OWNER}/#{version}-#{build}",
-          name: "#{version} (#{build})",
-          commitish: commit,
-          description: description.join("\n"),
-          is_prerelease: true
-        )
-      rescue => e
-        puts "::warning::Unable to create GitHub release: #{e.message}"
-      end
+    description = [
+      "**Version:** #{version} (#{build})",
+      "**Branch:** #{git_branch}",
+      "**Commit:** [#{short_sha}](#{repository_url}/commit/#{commit})",
+      "**Workflow run:** #{repository_url}/actions/runs/#{ENV["GITHUB_RUN_ID"]}"
+    ]
+    if ENV["TRIO_PATCHED"] == "true"
+      description.push("", "Built with local modifications not reflected in this commit.")
     end
+
+    set_github_release(
+      repository_name: ENV["GITHUB_REPOSITORY"],
+      api_token: ENV["GITHUB_TOKEN"],
+      tag_name: "#{GITHUB_REPOSITORY_OWNER}/#{version}-#{build}",
+      name: "#{version} (#{build})",
+      commitish: commit,
+      description: description.join("\n"),
+      is_prerelease: true
+    )
   end
 
   desc "Provision Identifiers and Certificates"
