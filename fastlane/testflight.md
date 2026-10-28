@@ -250,6 +250,7 @@ You can affect the default behavior:
 
 1. [`GH_PAT` `workflow` permission](#gh_pat-workflow-permission)
 1. [Modify scheduled building and synchronization](#modify-scheduled-building-and-synchronization)
+1. [Create a GitHub release for each build](#create-a-github-release-for-each-build)
 
 ### `GH_PAT` `workflow` permission
 
@@ -309,6 +310,14 @@ Your build will run on the following conditions:
 * If you disable any automation (both variables set to `false`), no updates or building happens when Build Trio runs
 * If you disabled just scheduled synchronization (`SCHEDULED_SYNC` set to`false`), it will still build once a month, but no update will happen
 * If you disabled just scheduled build (`SCHEDULED_BUILD` set to`false`), it will run once weekly, to check for changes; if there are changes, it will update and build
+
+### Create a GitHub release for each build
+
+The TestFlight app only lists builds by version and build number, for example `1.0.2 (90)`. To keep a record of what each build contains, set the variable `CREATE_GITHUB_RELEASE` to `true` (see [How to configure a variable](#how-to-configure-a-variable)).
+
+After each successful TestFlight upload, a pre-release is added to your repository's Releases page. It is titled with the same version and build number shown in TestFlight, tagged `<your GitHub username>/<version>-<build>`, and lists the branch, commit and workflow run used. If patches were applied during the build, the release notes say so.
+
+If the variable is missing or set to anything other than `true`, no release is created.
 
 ## What if I build using more than one GitHub username
 

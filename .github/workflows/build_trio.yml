@@ -238,6 +238,9 @@ jobs:
           # Several patches may be added per submodule.
           # Adding comments (#) is strongly recommended to easily tell the individual patches apart.
 
+          # Record whether any customization changed the checked-out source
+          git diff --quiet --ignore-submodules=none || echo "TRIO_PATCHED=true" >> $GITHUB_ENV
+
       # Optional: silence the startup warning shown on builds made from a branch other
       # than main. Off unless you deliberately set the repository variable
       # DEV_BRANCH_WARNING_DISABLED to true (Settings > Secrets and variables > Actions
@@ -286,6 +289,8 @@ jobs:
       - name: Fastlane upload to TestFlight
         run: bundle exec fastlane release
         env:
+          CREATE_GITHUB_RELEASE: ${{ vars.CREATE_GITHUB_RELEASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEAMID: ${{ secrets.TEAMID }}
           GH_PAT: ${{ secrets.GH_PAT }}
           FASTLANE_KEY_ID: ${{ secrets.FASTLANE_KEY_ID }}
