@@ -315,7 +315,7 @@ Your build will run on the following conditions:
 
 The TestFlight app only lists builds by version and build number, for example `1.0.2 (90)`. To keep a record of what each build contains, set the variable `CREATE_GITHUB_RELEASE` to `true` (see [How to configure a variable](#how-to-configure-a-variable)).
 
-After each successful TestFlight upload, a pre-release is added to your repository's Releases page. It is titled with the same version and build number shown in TestFlight followed by the branch name (for example `1.0.2 (90) - main`), tagged `<your GitHub username>/<version>-<build>`, and lists the branch, commit and workflow run used. If patches were applied during the build, the release notes say so.
+After each successful TestFlight upload, a pre-release is added to your repository's Releases page. It is titled with the same version and build number shown in TestFlight followed by the branch name (for example `1.0.2 (90) - main`), tagged `<your GitHub username>/<branch>/<version>-<build>`, and lists the branch, commit and workflow run used. If patches were applied during the build, the release notes say so.
 
 If the variable is missing or set to anything other than `true`, no release is created.
 
