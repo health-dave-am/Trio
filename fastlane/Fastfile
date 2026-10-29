@@ -167,11 +167,12 @@ platform :ios do
     )
     commit = last_git_commit[:commit_hash]
     short_sha = last_git_commit[:abbreviated_commit_hash]
+    branch = git_branch
     repository_url = "#{ENV["GITHUB_SERVER_URL"]}/#{ENV["GITHUB_REPOSITORY"]}"
 
     description = [
       "**Version:** #{version} (#{build})",
-      "**Branch:** #{git_branch}",
+      "**Branch:** #{branch}",
       "**Commit:** [#{short_sha}](#{repository_url}/commit/#{commit})",
       "**Workflow run:** #{repository_url}/actions/runs/#{ENV["GITHUB_RUN_ID"]}"
     ]
@@ -183,7 +184,7 @@ platform :ios do
       repository_name: ENV["GITHUB_REPOSITORY"],
       api_bearer: ENV["GITHUB_TOKEN"],
       tag_name: "#{GITHUB_REPOSITORY_OWNER}/#{version}-#{build}",
-      name: "#{version} (#{build})",
+      name: "#{version} (#{build}) - #{branch}",
       commitish: commit,
       description: description.join("\n"),
       is_prerelease: true
